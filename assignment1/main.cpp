@@ -52,14 +52,29 @@ void test_simple() {
     assert(reverse_words(test_str) == "desrever");
 }
 
+void test_specials() {
+    std::string test_str = "?.[]^&#";
+    assert(reverse_words(test_str) == "?.[]^&#");
+}
+
+void test_alphanumeric() {
+    std::string test_str = "fe80:0000:01ff:fe23:4567:890a";
+    assert(reverse_words(test_str) == "08ef:0000:ff10:32ef:7654:a098");
+}
+
+void test_single_sequences() {
+    std::string test_str = "a.b[1].x+a.b[2].y";
+    assert(reverse_words(test_str) == "a.b[1].x+a.b[2].y");
+}
+
 void test_multiple() {
     std::string test_str = "String to be reversed";
     assert(reverse_words(test_str) == "gnirtS ot eb desrever");
 }
 
-void test_alphanumeric() {
-    std::string test_str = "fe80::1ff:fe23:4567:890a";
-    assert(reverse_words(test_str) == "08ef::ff1:32ef:7654:a098");
+void test_multiple_specials() {
+    std::string test_str = "[.:@(&\")]a(*&%(*&'))b_+(";
+    assert(reverse_words(test_str) == "[.:@(&\")]a(*&%(*&'))b_+(");
 }
 
 void test_complex() {
@@ -70,8 +85,11 @@ void test_complex() {
 void test_all() {
     test_empty();
     test_simple();
-    test_multiple();
+    test_specials();
     test_alphanumeric();
+    test_single_sequences();
+    test_multiple();
+    test_multiple_specials();
     test_complex();
 }
 
