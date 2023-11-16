@@ -95,8 +95,8 @@ void test_all() {
 
 int main()
 {
-    test_all();
-    // std::string test_str = "String; 2be reversed...";
-    // assert(reverse_words(test_str) == "gnirtS; eb2 desrever...");
+    // test_all();
+    std::string test_str = "String; 2be reversed...";
+    assert(reverse_words(test_str) == "gnirtS; eb2 desrever...");
     return 0;
 }
