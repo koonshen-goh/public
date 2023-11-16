@@ -1,0 +1,7 @@
+# SCONSTRUCT file interesting lines
+config.version = Version(
+    major=15,
+    minor=0,
+    point=6,
+    patch=0
+)
