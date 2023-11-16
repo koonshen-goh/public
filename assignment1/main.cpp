@@ -2,10 +2,44 @@
 #include <string>
 #include <cassert>
 
+bool is_alphanumeric(char character) {
+    // Assumes ASCII encoding
+    return ('a' <= character && character <= 'z')
+        || ('A' <= character && character <= 'Z') 
+        || ('0' <= character && character <= '9');
+}
+// Use a unordered set for a more general use case, checking if character is in set
+
 std::string reverse_words(const std::string &str)
 {
-    // TODO: Implement this function
-    return "???";
+    std::string result;
+    uint strLen = str.length();
+    uint wordStart = strLen;
+    result.reserve(strLen);
+    for (uint i = 0; i < strLen; ++i) {
+        if (is_alphanumeric(str[i])) {
+            if (wordStart == strLen) {
+                // Start of new word, keep track of start position
+                wordStart = i;
+            }
+            // Continue iterating until end of word
+            continue;
+        } else if (wordStart != strLen) {
+            // End of word, append reversed substring to result
+            const std::string substring = str.substr(wordStart, i - wordStart);
+            result.append(substring.rbegin(), substring.rend());
+            wordStart = strLen;
+        }
+        // Non alphanumeric character, append character to result
+        result.push_back(str[i]);
+    }
+    // Special case, check if last word was not processed
+    if (wordStart != strLen) {
+        const std::string substring = str.substr(wordStart, strLen - wordStart);
+        result.append(substring.rbegin(), substring.rend());
+    }
+
+    return result;
 }
 
 void test_empty() {
