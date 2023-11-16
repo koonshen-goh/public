@@ -3,6 +3,7 @@ import os
 import re
 import stat
 import pathlib
+import argparse
 
 def updateSconstruct(SConstructPath: pathlib.Path, BuildNum: str):
     # "Update the build number in the SConstruct file"
@@ -29,14 +30,23 @@ def updateVersion(VersionPath: pathlib.Path, BuildNum: str):
         fout.write(buffer)
 
 if __name__ == "__main__":
-    SourcePath = os.environ["SourcePath"]
-    BuildNum = os.environ["BuildNum"]
+    # Get variables from command line or env vars
+    parser = argparse.ArgumentParser(description='build script that updates build numbers for project')
+    parser.add_argument('-s', '--source', default=os.environ.get('SourcePath', None), help='root path for the source code')
+    parser.add_argument('-b','--build', default=os.environ.get('BuildNum', None), help='build number')
+    args = parser.parse_args()
+    if args.source == None:
+        # Use current file path if path is not given
+        args.source = pathlib.Path(__file__).parent
+    if args.build == None:
+        # Throw exception if build number is not specified
+        raise Exception("BuildNum is not defined")
     
-    SConstructPath = pathlib.Path(SourcePath, "develop", "global", "src", "SConstruct")
-    VersionPath = pathlib.Path(SourcePath, "develop", "global", "src", "VERSION")
+    SConstructPath = pathlib.Path(args.source, "develop", "global", "src", "SConstruct")
+    VersionPath = pathlib.Path(args.source, "develop", "global", "src", "VERSION")
     # mode = 0755, rwx r-x r-x
     fileMode = stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH
     os.chmod(SConstructPath, fileMode)
-    updateSconstruct(SConstructPath, BuildNum)
+    updateSconstruct(SConstructPath, args.build)
     os.chmod(VersionPath, fileMode)
-    updateVersion(VersionPath, BuildNum)
+    updateVersion(VersionPath, args.build)
